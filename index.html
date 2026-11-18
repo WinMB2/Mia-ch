@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>三素句魔法城堡</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+      color: #642746;
+      background: #ffe5ef;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 28px 16px; background: radial-gradient(ellipse at top, #fff6fa, #ffd5e6); min-height: 100vh; }
+    main { max-width: 940px; margin: auto; }
+    header { text-align: center; }
+    .eyebrow { font-size: 14px; letter-spacing: 4px; color: #a34571; font-weight: bold; }
+    h1 { font-size: clamp(28px, 5vw, 44px); margin: 10px 0; }
+    .intro { font-size: 18px; line-height: 1.7; margin: 8px 0; }
+    .journey { position: relative; height: 156px; margin: 18px 0 0; overflow: hidden; }
+    .cloud { position: absolute; color: white; font-size: 50px; top: 0; left: 18%; }
+    .cloud.second { left: 57%; top: 15px; font-size: 36px; }
+    .path { position: absolute; left: 28px; right: 65px; bottom: 23px; border-bottom: 10px dotted #ed9fbe; }
+    .unicorn { position: absolute; left: 0; bottom: 22px; width: 85px; height: 95px; transition: left 1.3s ease; z-index: 2; }
+    .castle { position: absolute; right: 0; bottom: 20px; width: 105px; height: 120px; }
+    .panel { background: #fffdfd; border: 2px solid #fff; border-radius: 28px; padding: 26px; box-shadow: 0 14px 40px #ad3d7220; }
+    .status { display: flex; justify-content: space-between; gap: 12px; align-items: center; font-weight: bold; font-size: 19px; }
+    progress { display: block; width: 100%; height: 14px; margin: 14px 0 20px; accent-color: #d74687; }
+    .stars { color: #9e6513; letter-spacing: 3px; font-size: 22px; margin: 8px 0; overflow-wrap: anywhere; }
+    h2 { font-size: 24px; margin: 20px 0 8px; }
+    .hint { line-height: 1.8; margin: 0 0 16px; font-size: 18px; }
+    .formula { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 16px 0; }
+    .formula span { padding: 7px 14px; background: #fff0f6; border-radius: 20px; font-weight: bold; }
+    button { font: inherit; cursor: pointer; touch-action: manipulation; border: 2px solid transparent; }
+    button:focus-visible, summary:focus-visible { outline: 4px solid #6938aa; outline-offset: 4px; }
+    button:disabled { cursor: default; }
+    .answer { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-height: 92px; padding: 16px; border: 2px dashed #d98ab0; border-radius: 18px; background: #fff6fa; }
+    .placeholder { color: #98647e; font-size: 18px; }
+    .cards { display: flex; flex-wrap: wrap; gap: 12px; margin: 18px 0 24px; }
+    .card { border: 2px solid #e5a6c1; border-bottom: 5px solid #d68aaa; border-radius: 14px; padding: 12px 20px; min-height: 58px; background: white; color: #642746; font-size: 24px; font-weight: bold; }
+    .card:hover:not(:disabled) { background: #ffe7f1; transform: translateY(-2px); }
+    .card:disabled { opacity: .35; }
+    .answer .card { background: #ffe1ed; padding: 8px 14px; }
+    .answer .card:disabled { opacity: 1; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .action { min-height: 52px; border-radius: 14px; padding: 11px 24px; background: #f7e7ef; color: #702c4d; font-size: 19px; font-weight: bold; }
+    .primary { background: #b83272; color: white; }
+    .action:disabled { opacity: .45; }
+    .message { min-height: 58px; margin: 16px 0 0; line-height: 1.7; font-size: 19px; font-weight: bold; }
+    .success { color: #22633e; }
+    .finish { text-align: center; padding: 20px 0; }
+    .finish h2 { font-size: 32px; }
+    .medal { font-size: 60px; animation: celebrate 1s ease-in-out 3; }
+    footer { text-align: center; padding: 18px 8px; font-size: 14px; line-height: 1.8; color: #87526c; }
+    details { margin-top: 24px; border-top: 1px solid #efd6e2; padding-top: 18px; }
+    summary { cursor: pointer; font-size: 16px; }
+    ol { line-height: 2; padding-left: 30px; }
+    [hidden] { display: none !important; }
+    @keyframes celebrate { 50% { transform: translateY(-12px) rotate(6deg); } }
+    @media (max-width: 520px) {
+      body { padding: 20px 12px; }
+      .panel { padding: 20px 16px; }
+      .card { padding: 10px 14px; font-size: 22px; }
+      .action { padding: 10px 16px; }
+      .journey { height: 135px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="eyebrow">一年級 · 中文小冒險</div>
+      <h1>三素句魔法城堡</h1>
+      <p class="intro">排好句子，收集星星，<br>陪粉紅獨角獸走到魔法城堡！</p>
+    </header>
+
+    <div class="journey" role="img" aria-label="粉紅獨角獸正在前往城堡">
+      <span class="cloud" aria-hidden="true">☁</span>
+      <span class="cloud second" aria-hidden="true">☁</span>
+      <div class="path"></div>
+      <svg class="unicorn" viewBox="0 0 100 110" aria-hidden="true">
+        <path d="M23 66 Q0 40 7 84 Q17 73 29 84" fill="#d75b9b"/>
+        <ellipse cx="44" cy="73" rx="29" ry="20" fill="#ffafd4"/>
+        <path d="M28 83 L25 103 M51 86 L55 103" stroke="#f18ab9" stroke-width="11" stroke-linecap="round"/>
+        <path d="M57 73 Q48 44 65 24 L85 35 L90 60 L72 68" fill="#ffbedd"/>
+        <path d="M65 30 L72 6 L77 33" fill="#efbd58" stroke="#ac7528" stroke-width="2"/>
+        <path d="M64 30 L54 20 L56 44" fill="#f28bbd"/>
+        <path d="M62 33 Q42 39 51 65" fill="none" stroke="#d75b9b" stroke-width="12" stroke-linecap="round"/>
+        <circle cx="77" cy="45" r="3" fill="#642746"/>
+        <path d="M80 58 Q85 62 89 57" fill="none" stroke="#a44270" stroke-width="2"/>
+        <circle cx="76" cy="55" r="5" fill="#f28bbd"/>
+      </svg>
+      <svg class="castle" viewBox="0 0 120 140" aria-hidden="true">
+        <path d="M60 9 L60 0 L82 4 L60 10" fill="#bf3c79"/>
+        <path d="M17 58 H103 V132 H17 Z" fill="#ef9cc6"/>
+        <path d="M44 36 H76 V132 H44 Z" fill="#ffd1e7"/>
+        <path d="M37 36 L60 8 L83 36 Z M4 58 L24 29 L44 58 Z M77 58 L98 29 L118 58 Z" fill="#bc4d96"/>
+        <path d="M12 59 H36 V132 H12 Z M86 59 H110 V132 H86 Z" fill="#f8b5d6"/>
+        <path d="M46 132 V106 Q60 82 74 106 V132" fill="#ab5080"/>
+        <path d="M55 50 H65 V65 H55 Z M20 73 H28 V87 H20 Z M94 73 H102 V87 H94 Z" fill="#fff4cf"/>
+      </svg>
+    </div>
+
+    <section class="panel" aria-label="句子遊戲">
+      <div class="status"><span id="counter"></span><span id="score"></span></div>
+      <progress id="progress" value="0" max="10" aria-label="已完成題數"></progress>
+      <div id="stars" class="stars" aria-label="星星獎勵"></div>
+
+      <div id="play">
+        <h2 id="question" tabindex="-1"></h2>
+        <p class="hint" id="clue"></p>
+        <div class="formula" aria-label="句式：時間，人物事情。">
+          <span>時間</span><b>，</b><span>人物</span><b>＋</b><span>事情</span><b>。</b>
+        </div>
+        <p class="hint">依次點選詞卡和標點。小心，有一張多餘詞卡！<br>想修改？點一下已選的詞卡，就能放回去。</p>
+        <div id="answer" class="answer" role="group" aria-label="你的句子"></div>
+        <div id="cards" class="cards" role="group" aria-label="可選詞卡及標點"></div>
+        <div class="actions">
+          <button id="check" class="action primary" type="button">檢查句子 ✨</button>
+          <button id="retry" class="action" type="button">清空重試</button>
+          <button id="next" class="action primary" type="button" hidden>下一題 →</button>
+        </div>
+        <p id="message" class="message" role="status" aria-live="polite"></p>
+      </div>
+
+      <div id="finish" class="finish" hidden>
+        <div class="medal" aria-hidden="true">🌟</div>
+        <h2 tabindex="-1" id="finishTitle">魔法城堡到了！</h2>
+        <p class="intro">你完成了全部10題，收集了10顆星星！<br>粉紅獨角獸已抵達城堡。你是三素句小魔法師！</p>
+        <button id="restart" class="action primary" type="button">再玩一次 ↻</button>
+      </div>
+
+      <details>
+        <summary>老師／家長：查看題目答案</summary>
+        <p>第1題保留附件例題；第2至10題為本版本新增的練習題。</p>
+        <ol id="answerKey"></ol>
+      </details>
+    </section>
+    <footer>慢慢想，再試一次也可以。每答對一題，就能獲得一顆星星。<br>單一 HTML · 無須安裝 · 可離線遊玩</footer>
+  </main>
+
+  <script>
+    "use strict";
+
+    // 第1題來自附件例題；其餘9題為新編題目。
+    // 每題使用時間、人物、事情、多餘詞卡及情境提示。
+    const questions = [
+      { time: "晚上", person: "爸爸", action: "看電視", extra: "太陽", clue: "天黑了，爸爸坐在電視機前。他在做甚麼？" },
+      { time: "早上", person: "我", action: "吃早餐", extra: "月亮", clue: "早上起床後，我坐在餐桌前吃第一餐。" },
+      { time: "中午", person: "妹妹", action: "吃午飯", extra: "星星", clue: "到了中午，妹妹捧着飯碗吃飯。" },
+      { time: "下午", person: "哥哥", action: "踢足球", extra: "書包", clue: "下午，哥哥在球場上用腳踢球。" },
+      { time: "放學後", person: "我", action: "做功課", extra: "白雲", clue: "放學回家後，我拿出課本和鉛筆完成作業。" },
+      { time: "星期日", person: "媽媽", action: "買水果", extra: "鉛筆", clue: "星期日，媽媽到市場買蘋果和香蕉。" },
+      { time: "下課時", person: "小明", action: "喝水", extra: "石頭", clue: "下課了，小明打開水壺，喝了一口水。" },
+      { time: "晚飯後", person: "姐姐", action: "洗碗", extra: "彩虹", clue: "吃完晚飯，姐姐在廚房把碗洗乾淨。" },
+      { time: "睡覺前", person: "弟弟", action: "刷牙", extra: "花朵", clue: "準備睡覺了，弟弟拿起牙刷清潔牙齒。" },
+      { time: "星期六", person: "爺爺", action: "看報紙", extra: "皮球", clue: "星期六，爺爺坐在椅子上閱讀報紙。" }
+    ];
+
+    const elements = {};
+    const elementIds = [
+      "counter", "score", "progress", "stars", "play", "question", "clue",
+      "answer", "cards", "check", "retry", "next", "message", "finish",
+      "finishTitle", "restart", "answerKey"
+    ];
+    elementIds.forEach(function (id) {
+      elements[id] = document.getElementById(id);
+    });
+
+    let questionIndex = 0;
+    let stars = 0;
+    let selected = [];
+    let cards = [];
+    let solved = false;
+
+    function correctTokens(question) {
+      return [question.time, "，", question.person, question.action, "。"];
+    }
+
+    function shuffle(items) {
+      const result = items.slice();
+      for (let index = result.length - 1; index > 0; index -= 1) {
+        const other = Math.floor(Math.random() * (index + 1));
+        [result[index], result[other]] = [result[other], result[index]];
+      }
+      return result;
+    }
+
+    function updateProgress() {
+      elements.counter.textContent = "第 " + (questionIndex + 1) + " / " + questions.length + " 題";
+      elements.score.textContent = "★ " + stars + " / " + questions.length;
+      elements.progress.max = questions.length;
+      elements.progress.value = stars;
+      elements.stars.textContent = "★".repeat(stars) + "☆".repeat(questions.length - stars);
+      elements.stars.setAttribute("aria-label", "已獲得 " + stars + " 顆星星");
+      const distance = stars / questions.length;
+      document.querySelector(".unicorn").style.left = "calc(" + (distance * 100) + "% - " + (distance * 130) + "px)";
+      document.querySelector(".journey").setAttribute("aria-label", stars === questions.length ? "粉紅獨角獸已抵達魔法城堡" : "粉紅獨角獸已走過 " + stars + " 關");
+    }
+
+    function showMessage(text, success) {
+      elements.message.textContent = text;
+      elements.message.classList.toggle("success", Boolean(success));
+    }
+
+    function renderCards() {
+      elements.cards.replaceChildren();
+      elements.answer.replaceChildren();
+      if (selected.length === 0) {
+        const placeholder = document.createElement("span");
+        placeholder.className = "placeholder";
+        placeholder.textContent = "點選下面的詞卡，在這裏排句子……";
+        elements.answer.append(placeholder);
+      }
+
+      cards.forEach(function (text, index) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "card";
+        button.textContent = text;
+        button.disabled = solved || selected.includes(index);
+        button.setAttribute("aria-label", "加入「" + text + "」");
+        button.addEventListener("click", function () {
+          if (solved) return;
+          selected.push(index);
+          showMessage("");
+          renderCards();
+          const available = elements.cards.querySelector("button:not(:disabled)");
+          (available || elements.check).focus();
+        });
+        elements.cards.append(button);
+      });
+
+      selected.forEach(function (cardIndex, position) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "card";
+        button.textContent = cards[cardIndex];
+        button.disabled = solved;
+        button.setAttribute("aria-label", "移除第 " + (position + 1) + " 張「" + cards[cardIndex] + "」");
+        button.addEventListener("click", function () {
+          if (solved) return;
+          selected.splice(position, 1);
+          showMessage("");
+          renderCards();
+          elements.cards.children[cardIndex].focus();
+        });
+        elements.answer.append(button);
+      });
+    }
+
+    function loadQuestion() {
+      const question = questions[questionIndex];
+      selected = [];
+      solved = false;
+      cards = shuffle([question.time, question.person, question.action, question.extra, "，", "。"]);
+      elements.question.textContent = "第 " + (questionIndex + 1) + " 關 · 排出魔法句子";
+      elements.clue.textContent = "小提示：" + question.clue;
+      elements.check.disabled = false;
+      elements.retry.disabled = false;
+      elements.next.hidden = true;
+      showMessage("");
+      updateProgress();
+      renderCards();
+    }
+
+    function checkAnswer() {
+      if (solved) return;
+      const expected = correctTokens(questions[questionIndex]);
+      const actual = selected.map(function (index) { return cards[index]; });
+      if (actual.length !== expected.length) {
+        showMessage("再看看：需要3張詞卡、1個逗號和1個句號，共5張卡。多餘詞卡不用選喔！");
+        return;
+      }
+      const isCorrect = expected.every(function (text, index) { return actual[index] === text; });
+      if (!isCorrect) {
+        if (actual.includes(questions[questionIndex].extra)) {
+          showMessage("有一張多餘詞卡混進來了！找出時間、人物和事情，再試一次。");
+        } else if (actual[1] !== "，" || actual[4] !== "。") {
+          showMessage("標點小提示：時間後面放逗號「，」，句子最後放句號「。」。");
+        } else {
+          showMessage("快成功了！先排時間，再排人物，最後排事情。點選上面的詞卡可以修改。");
+        }
+        return;
+      }
+      solved = true;
+      stars += 1;
+      elements.check.disabled = true;
+      elements.retry.disabled = true;
+      renderCards();
+      updateProgress();
+      showMessage("答對了！" + expected.join("") + "　獲得一顆星星 ★", true);
+      elements.next.textContent = questionIndex === questions.length - 1 ? "進入魔法城堡 ✨" : "下一題 →";
+      elements.next.hidden = false;
+      elements.next.focus();
+    }
+
+    elements.check.addEventListener("click", checkAnswer);
+    elements.retry.addEventListener("click", function () {
+      if (solved) return;
+      selected = [];
+      renderCards();
+      showMessage("已放回所有詞卡。慢慢想，再試一次！");
+    });
+    elements.next.addEventListener("click", function () {
+      if (!solved) return;
+      if (questionIndex === questions.length - 1) {
+        elements.play.hidden = true;
+        elements.finish.hidden = false;
+        elements.counter.textContent = "全部完成！";
+        elements.finishTitle.focus();
+      } else {
+        questionIndex += 1;
+        loadQuestion();
+        elements.question.focus();
+      }
+    });
+    elements.restart.addEventListener("click", function () {
+      questionIndex = 0;
+      stars = 0;
+      elements.finish.hidden = true;
+      elements.play.hidden = false;
+      document.querySelector("details").open = false;
+      loadQuestion();
+      elements.question.focus();
+    });
+
+    questions.forEach(function (question) {
+      const item = document.createElement("li");
+      item.textContent = correctTokens(question).join("");
+      elements.answerKey.append(item);
+    });
+    loadQuestion();
+  </script>
+</body>
+</html>
